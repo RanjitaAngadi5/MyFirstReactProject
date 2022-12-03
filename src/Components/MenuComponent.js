@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import moment from 'moment';
+import { DISHES } from '../shared/dishes'
 import { Card, CardImg, CardImgOverlay, CardText, CardBody,
     CardTitle } from 'reactstrap';
 
@@ -13,30 +15,42 @@ class Menu extends Component {
     }
 
     onDishSelect(dish) {
+        console.log('dishnn',dish);
         this.setState({ selectedDish: dish});
     }
 
     renderDish(dish) {
-        if (dish != null)
+        if (dish != null){
             return(
+            <div>
                 <Card>
                     <CardImg top src={dish.image} alt={dish.name} />
                     <CardBody>
                       <CardTitle>{dish.name}</CardTitle>
                       <CardText>{dish.description}</CardText>
-                      <CardText>{dish.comment}</CardText>
-
+                      {/* <hr/> */}
                     </CardBody>
                 </Card>
+                <h1>Comments</h1>
+                       {dish && dish.comments && dish.comments.length ? dish.comments.map((ele,i)=>{
+                             return(
+                            <>
+                                <CardText>{ele.comment}</CardText>
+                                <CardText>-- {ele.author}, {moment(ele.date).format('MMM DD,YYYY')}</CardText>
+                            </>
+                             );
+                      })   
+                : null}
+            </div>
             );
-        else
-            return(
-                <div></div>
-            );
+        }else{
+            return(<div>No Dishes</div>);
+        }
     }
 
     render() {
         const menu = this.props.dishes.map((dish) => {
+            console.log('DISHES',dish);
             return (
               <div  className="col-12 col-md-5 m-1">
                 <Card key={dish.id}
